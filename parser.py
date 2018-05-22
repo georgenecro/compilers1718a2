@@ -100,7 +100,7 @@ class MyParser:
 			
 	def session(self):																# checking and / not
 		
-		if self.la=='AND' or self.la=='NOT':
+		if self.la=='and' or self.la=='not':
 			self.facts()
 			self.question()
 		elif self.la=='(':
@@ -114,10 +114,10 @@ class MyParser:
 	
 	def facts(self):																# checking and, not
 		
-		if self.la=='AND':
+		if self.la=='and':
 			self.fact()
 			self.facts()
-		elif self.la=='NOT':	# from FOLLOW set!
+		elif self.la=='not':	# from FOLLOW set!
 			return
 		else:
 			raise ParseError("in facts: AND/NOT")
@@ -125,20 +125,13 @@ class MyParser:
 	
 	def fact(self):																# checking not
 		
-		if self.la=='NOT':
+		if self.la=='not':
 			self.match('not')
 			self.match('string')
 		else:
 			raise ParseError("in fact: NOT")
 			 	
 
-	def question(self):
-		
-		if self.la=='?':
-			self.match('?')
-			self.match('string')
-		else:
-			raise ParseError("in question: ? expected")
 
 		
 # the main part of prog
@@ -151,9 +144,5 @@ fp = input('give some input>')
 	# parse file
 try:
 	parser.parse(fp)
-except plex.errors.PlexError:
-	_,lineno,charno = parser.position()	
-	print("Scanner Error: at line {} char {}".format(lineno,charno+1))
 except ParseError as perr:
-	_,lineno,charno = parser.position()	
-	print("Parser Error: {} at line {} char {}".format(perr,lineno,charno+1))
+	print(perr)
